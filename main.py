@@ -7,9 +7,9 @@ from CycleService import CycleService
 #参数初始化
 def wechat_siri_param_init():
     #读取wechat推送地址
-    with open('wechar_siri.cfg', 'r') as f:
+    with open('wechar_siri.cfg', 'r', encoding='UTF-8') as f:
         cfg_val = json.loads(f.read())
-        return cfg_val['webhook_url'], float(cfg_val['sleep_cycle']), cfg_val['weather_token_id']
+        return cfg_val['webhook_url'], float(cfg_val['sleep_cycle']), cfg_val['weather_token_id'], cfg_val['food_list']
     print("wechat_siri_param_init")
 
 def cycle_run(callback, sleep_cycle):
@@ -40,13 +40,14 @@ def main():
     webhook_url = ""
     sleep_cycle = 0
     weather_token_id = ""
+    food_list_str = ""
 
-    webhook_url, sleep_cycle, weather_token_id = wechat_siri_param_init()
+    webhook_url, sleep_cycle, weather_token_id, food_list_str = wechat_siri_param_init()
     print("webhook_url=" + webhook_url)
     print("sleep_cycle=" + str(sleep_cycle))
     print("weather_token_id=" + weather_token_id)
     cycleServce = CycleService()
-    cycleServce.CycleServiceInit(webhook_url, weather_token_id)
+    cycleServce.CycleServiceInit(webhook_url, weather_token_id, food_list_str)
     thread = runThread(1, "cycle_run", cycleServce.CycleServiceCallbck, sleep_cycle)
     thread.start()
     thread.join()
